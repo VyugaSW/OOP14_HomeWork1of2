@@ -97,7 +97,7 @@ int OptimumTimeOfBusArriving(int passTime, int maxSizeBus) {
     // n - ideal count of people
     // +1 - need
     // 0.8 - ideal chance
-    // |n = M+1 - 0.8 * M  (from formula ((M - n + 1) * 1/5 = 0.8)
+    // |n = M+1 - 0.8 * M  (from formula ((M - n + 1) * 1/M = 0.8)
     // P - people time arriving
     // B - bus time arriving
     // |ideal time of bus arriving (IToBA) = P * n
