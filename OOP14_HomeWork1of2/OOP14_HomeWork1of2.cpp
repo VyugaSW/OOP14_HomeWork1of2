@@ -30,7 +30,7 @@ void EnterData(Day &passTime, Day &busTime) {
 
 // average waiting time
 int AverageTime(int passTimeAf, int bussTimeAf, int mode) {
-    int maxSizeBus = 0; // max size of bus
+    int maxSizeBus = NULL; // max size of bus
 
     // mode = 0 - afternoon, mode = 1 = morning, mode = 2 - evening
     if (mode == 0) maxSizeBus = 6;
@@ -43,7 +43,6 @@ int AverageTime(int passTimeAf, int bussTimeAf, int mode) {
     int averageTimeStay = 0; // average time stay passenger on a bus stop
     int averageTimesSpent = 0; // number of times the middle passenger was picked up by the bus
 
-    int middlePassenger = N; // middle passenger =  all passengers / 2
     int timeSpent = 0; // time which a middle passenger spent on a bus stop
     int countBusSpent = 0; // buses which was missed
 
@@ -58,14 +57,8 @@ int AverageTime(int passTimeAf, int bussTimeAf, int mode) {
         if (passengers.isFull())
             return -1;
 
-        // If we don't have a middle passenger yet
-        if (middlePassenger == N) 
-            middlePassenger = passengers.getCount() / 2;
-
-        if (countBusSpent == 0)
-            timeSpent += bussTimeAf / 2; // he waited first bus       
-        else // he waited not first bus
-            timeSpent += bussTimeAf; // How long he waited a bus
+    
+        timeSpent += bussTimeAf; // How long passanger waited a bus
 
         countBusSpent++; // Missed bus (It must be more than 1 in order not to divide by 0)
 
@@ -77,12 +70,11 @@ int AverageTime(int passTimeAf, int bussTimeAf, int mode) {
             passengers.extract();
         }
 
-        if (middlePassenger >= passengers.getCount()) {
+        if (passengers.isEmpty()) {
             averageTimeStay += timeSpent / countBusSpent; //determine the average time spent by one middle passenger
             averageTimesSpent++; // How many middle passengers waited
             timeSpent = 0; // Zeroing
             countBusSpent = 0; // Zeroing
-            middlePassenger = passengers.getCount() / 2; // determining the middle passenger
         }
 
     }
@@ -96,13 +88,13 @@ int OptimumTimeOfBusArriving(int passTime, int maxSizeBus) {
     // M - max size of bus
     // n - ideal count of people
     // +1 - need
-    // 0.8 - ideal chance
-    // |n = M+1 - 0.8 * M  (from formula ((M - n + 1) * 1/M = 0.8)
+    // 0.75 - ideal chance
+    // |n = M+1 - 0.75 * M  (from formula ((M - n + 1) * 1/M = 0.75)
     // P - people time arriving
     // B - bus time arriving
     // |ideal time of bus arriving (IToBA) = P * n
-    // |=> IToBA = P * (M + 1 - 0.8 * M)
-    return passTime * (maxSizeBus + 1 - 0.8 * maxSizeBus);
+    // |=> IToBA = P * (M + 1 - 0.75 * M)
+    return passTime * (maxSizeBus + 1 - 0.7 * maxSizeBus);
 }
 
 int main()
@@ -129,7 +121,7 @@ int main()
         cout << "Average waiting time during the day - " << avTimeEv << endl;
     else 
         cout << "The bus stop was fulled, so people didn't wait for the bus.\n";
-    cout << "Best bus arrival time - " << OptimumTimeOfBusArriving(passTime.aveTimeApp_Eve, 6) << endl;
+    cout << "Best bus arrival time - " << OptimumTimeOfBusArriving(passTime.aveTimeApp_Eve, 5) << endl;
 
     cout << "\nMorning\n\n";
     if (avTimeMo != -1)
